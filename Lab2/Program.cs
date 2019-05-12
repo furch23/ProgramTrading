@@ -111,38 +111,43 @@ namespace Lab2
 
         }
 
+        //產生一個List<double>型別的物件
         private static List<double> listAVGPrice = new List<double>();
 
         /// <summary>
         /// 通知成交價
         /// </summary>
+        private static void MrWangConnection_OnMatchInfo(Match match)
+        {
+            //成交價放入List中
+            listAVGPrice.Add(match.MatchPrice);
+
+            double AVGPrice = 0;
+
+            //加總List的所有成交價
+            for (int i = 0; i < listAVGPrice.Count; i++)
+            {
+                AVGPrice += listAVGPrice[i];
+            }
+
+            //計算平均
+            AVGPrice = AVGPrice / listAVGPrice.Count;
+
+            Console.WriteLine($"Symbol:{match.Symbol}" +
+                $" Last:{match.MatchPrice} x {match.MatchQty}" +
+                $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
+        }
+
         //private static void MrWangConnection_OnMatchInfo(Match match)
         //{
         //    listAVGPrice.Add(match.MatchPrice);
 
-        //    double AVGPrice = 0;
-        //    for (int i = 0; i < listAVGPrice.Count; i++)
-        //    {
-        //        AVGPrice += listAVGPrice[i];
-        //    }
-
-        //    AVGPrice = AVGPrice / listAVGPrice.Count;
+        //    double AVGPrice = listAVGPrice.Average(x => x);
 
         //    Console.WriteLine($"Symbol:{match.Symbol}" +
         //        $" Last:{match.MatchPrice} x {match.MatchQty}" +
         //        $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
         //}
-
-        private static void MrWangConnection_OnMatchInfo(Match match)
-        {
-            listAVGPrice.Add(match.MatchPrice);
-
-            double AVGPrice = listAVGPrice.Average(x => x);
-          
-            Console.WriteLine($"Symbol:{match.Symbol}" +
-                $" Last:{match.MatchPrice} x {match.MatchQty}" +
-                $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
-        }
     }
 
 }

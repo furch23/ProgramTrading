@@ -118,26 +118,26 @@ namespace Lab1
         /// </summary>
         private static void MrWangConnection_OnMatchInfo(Match match)
         {
-            if (high == 0)
+            if (high == 0) //判斷成交價是否等於初始值
             {
                 high = match.MatchPrice;
             }
-            else if (high < match.MatchPrice)//10001
-            {   //10000
+            else if (high < match.MatchPrice) //判斷成交價是否等於初始值
+            {   
                 high = match.MatchPrice;
             }
 
-            if (low == 0)
+            if (low == 0) //判斷成交價是否等於初始值
             {
                 low = match.MatchPrice;
             }
-            else if (low > match.MatchPrice)
+            else if (low > match.MatchPrice)//判斷成交價是否低於過去最低價
             {
                 low = match.MatchPrice;
             }
 
             Console.WriteLine($"Symbol:{match.Symbol} Last:{match.MatchPrice} x {match.MatchQty} Volume:{match.Volume} High:{high} Low:{low}");
-            Console.WriteLine("Symbol:" + match.Symbol + "Last:" + match.MatchPrice + " x {match.MatchQty} Volume:{match.Volume} High:{high} Low:{low}");
+        
         }
     }
 }
