@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Lab1
+namespace Lab3
 {
-
     class Program
     {
         static MrWangConnection MrWangConnection;
@@ -77,8 +77,8 @@ namespace Lab1
             {
                 //登入成功
                 Console.WriteLine("登入成功。");
-                Console.WriteLine("訂閱商品TXD9。");
-                MrWangConnection.SubscribeQuote("TXFD9", 5);
+                Console.WriteLine("訂閱商品TXFD9。");
+                MrWangConnection.SubscribeQuote("TXFD9", 20);
             }
             else
             {
@@ -111,33 +111,62 @@ namespace Lab1
 
         }
 
-        static double high = 0;
-        static double low = 0;
+        private static List<double> listAVG10Price = new List<double>();
+        private static List<double> listAVG20Price = new List<double>();
+        private static List<double> listAVG30Price = new List<double>();
+
         /// <summary>
         /// 通知成交價
         /// </summary>
         private static void MrWangConnection_OnMatchInfo(Match match)
         {
-            if (high == 0)
-            {
-                high = match.MatchPrice;
-            }
-            else if (high < match.MatchPrice)//10001
-            {   //10000
-                high = match.MatchPrice;
-            }
+            listAVG10Price.Add(match.MatchPrice);
+            listAVG20Price.Add(match.MatchPrice);
+            listAVG30Price.Add(match.MatchPrice);
 
-            if (low == 0)
-            {
-                low = match.MatchPrice;
-            }
-            else if (low > match.MatchPrice)
-            {
-                low = match.MatchPrice;
-            }
+            if (listAVG10Price.Count > 10) { listAVG10Price.RemoveAt(0); }
+            if (listAVG20Price.Count > 30) { listAVG20Price.RemoveAt(0); }
+            if (listAVG30Price.Count > 50) { listAVG30Price.RemoveAt(0); }
 
-            Console.WriteLine($"Symbol:{match.Symbol} Last:{match.MatchPrice} x {match.MatchQty} Volume:{match.Volume} High:{high} Low:{low}");
-            Console.WriteLine("Symbol:" + match.Symbol + "Last:" + match.MatchPrice + " x {match.MatchQty} Volume:{match.Volume} High:{high} Low:{low}");
+            double AVG10Price = Math.Round(listAVG10Price.Average(x => x), 0);
+            double AVG20Price = Math.Round(listAVG20Price.Average(x => x), 0);
+            double AVG30Price = Math.Round(listAVG30Price.Average(x => x), 0);
+
+            Console.WriteLine($"{match.Time} -> Symbol:{match.Symbol}" +
+            $" Last:{match.MatchPrice} x {match.MatchQty}" +
+            $" Volume:{match.Volume} AVG10:{AVG10Price} AVG20:{AVG20Price} AVG30:{AVG30Price}");
         }
+        //private static void MrWangConnection_OnMatchInfo(Match match)
+        //{
+        //    listAVG10Price.Add(match.MatchPrice);
+        //    listAVG20Price.Add(match.MatchPrice);
+        //    listAVG30Price.Add(match.MatchPrice);
+
+        //    if (listAVG10Price.Count > 10) { listAVG10Price.RemoveAt(0); }
+        //    if (listAVG20Price.Count > 30) { listAVG20Price.RemoveAt(0); }
+        //    if (listAVG30Price.Count > 50) { listAVG30Price.RemoveAt(0); }
+
+        //    double AVG10Price = Math.Round(listAVG10Price.Average(x => x), 0);
+        //    double AVG20Price = Math.Round(listAVG20Price.Average(x => x), 0);
+        //    double AVG30Price = Math.Round(listAVG30Price.Average(x => x), 0);
+
+        //    if (AVG10Price > AVG20Price && AVG20Price > AVG30Price)
+        //    {
+        //        Console.ForegroundColor = ConsoleColor.Red;
+        //    }
+        //    else if (AVG10Price < AVG20Price && AVG20Price < AVG30Price)
+        //    {
+        //        Console.ForegroundColor = ConsoleColor.Green;
+        //    }
+        //    else
+        //    {
+        //        Console.ForegroundColor = ConsoleColor.White;
+        //    }
+
+        //    Console.WriteLine($"{match.Time} -> Symbol:{match.Symbol}" +
+        //    $" Last:{match.MatchPrice} x {match.MatchQty}" +
+        //    $" Volume:{match.Volume} AVG10:{AVG10Price} AVG20:{AVG20Price} AVG30:{AVG30Price}");
+        //}
     }
 }
+

@@ -1,22 +1,20 @@
-﻿using System;
+﻿using MrWangAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MrWangAPI;
+using System.Threading.Tasks;
 
-
-namespace ProgramTrading
+namespace Lab2
 {
     class Program
     {
         static MrWangConnection MrWangConnection;
         static void Main(string[] args)
         {
-
-            //第一步.初始化API元件
+            //初始化API元件
             init();
-
-            //第二步.執行連線
+            //執行連線
             MrWangConnection.Connect("127.0.0.1", 5000);
 
             while (true)
@@ -59,7 +57,6 @@ namespace ProgramTrading
         {
             Console.WriteLine("連線成功。");
 
-            //第三步. 執行登入
             MrWangConnection.LogIn("A123456789", "1234");
         }
 
@@ -81,8 +78,6 @@ namespace ProgramTrading
                 //登入成功
                 Console.WriteLine("登入成功。");
                 Console.WriteLine("訂閱商品TXFD9。");
-
-                //第四步 訂閱報價
                 MrWangConnection.SubscribeQuote("TXFD9");
             }
             else
@@ -105,9 +100,7 @@ namespace ProgramTrading
         /// </summary>
         private static void MrWangConnection_OnTradingReply(Reply reply)
         {
-            Console.WriteLine($"Status:{reply.OrderStatus} {reply.Side} " +
-                              $"{reply.Qty} {reply.Symbol} @ {reply.Price} " +
-                              $"{reply.orderType} {reply.TimeInForce}");
+
         }
 
         /// <summary>
@@ -115,19 +108,41 @@ namespace ProgramTrading
         /// </summary>
         private static void MrWangConnection_OnOrderBookData(OrderBook orderBook)
         {
-            Console.WriteLine($"Symbol:{orderBook.Symbol}" +
-                $" Bid:{orderBook.BidPrice} x {orderBook.BidQty}" +
-                $" Ask:{orderBook.AskPrice} x {orderBook.AskQty}");
+
         }
+
+        private static List<double> listAVGPrice = new List<double>();
 
         /// <summary>
         /// 通知成交價
         /// </summary>
+        //private static void MrWangConnection_OnMatchInfo(Match match)
+        //{
+        //    listAVGPrice.Add(match.MatchPrice);
+
+        //    double AVGPrice = 0;
+        //    for (int i = 0; i < listAVGPrice.Count; i++)
+        //    {
+        //        AVGPrice += listAVGPrice[i];
+        //    }
+
+        //    AVGPrice = AVGPrice / listAVGPrice.Count;
+
+        //    Console.WriteLine($"Symbol:{match.Symbol}" +
+        //        $" Last:{match.MatchPrice} x {match.MatchQty}" +
+        //        $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
+        //}
+
         private static void MrWangConnection_OnMatchInfo(Match match)
         {
+            listAVGPrice.Add(match.MatchPrice);
+
+            double AVGPrice = listAVGPrice.Average(x => x);
+
             Console.WriteLine($"Symbol:{match.Symbol}" +
                 $" Last:{match.MatchPrice} x {match.MatchQty}" +
-                $" Volume:{match.Volume}");
+                $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
         }
     }
+
 }

@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Lab1
+namespace Lab2
 {
-
     class Program
     {
         static MrWangConnection MrWangConnection;
@@ -77,8 +77,8 @@ namespace Lab1
             {
                 //登入成功
                 Console.WriteLine("登入成功。");
-                Console.WriteLine("訂閱商品TXD9。");
-                MrWangConnection.SubscribeQuote("TXFD9", 5);
+                Console.WriteLine("訂閱商品TXFD9。");
+                MrWangConnection.SubscribeQuote("TXFD9");
             }
             else
             {
@@ -111,33 +111,38 @@ namespace Lab1
 
         }
 
-        static double high = 0;
-        static double low = 0;
+        private static List<double> listAVGPrice = new List<double>();
+
         /// <summary>
         /// 通知成交價
         /// </summary>
+        //private static void MrWangConnection_OnMatchInfo(Match match)
+        //{
+        //    listAVGPrice.Add(match.MatchPrice);
+
+        //    double AVGPrice = 0;
+        //    for (int i = 0; i < listAVGPrice.Count; i++)
+        //    {
+        //        AVGPrice += listAVGPrice[i];
+        //    }
+
+        //    AVGPrice = AVGPrice / listAVGPrice.Count;
+
+        //    Console.WriteLine($"Symbol:{match.Symbol}" +
+        //        $" Last:{match.MatchPrice} x {match.MatchQty}" +
+        //        $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
+        //}
+
         private static void MrWangConnection_OnMatchInfo(Match match)
         {
-            if (high == 0)
-            {
-                high = match.MatchPrice;
-            }
-            else if (high < match.MatchPrice)//10001
-            {   //10000
-                high = match.MatchPrice;
-            }
+            listAVGPrice.Add(match.MatchPrice);
 
-            if (low == 0)
-            {
-                low = match.MatchPrice;
-            }
-            else if (low > match.MatchPrice)
-            {
-                low = match.MatchPrice;
-            }
-
-            Console.WriteLine($"Symbol:{match.Symbol} Last:{match.MatchPrice} x {match.MatchQty} Volume:{match.Volume} High:{high} Low:{low}");
-            Console.WriteLine("Symbol:" + match.Symbol + "Last:" + match.MatchPrice + " x {match.MatchQty} Volume:{match.Volume} High:{high} Low:{low}");
+            double AVGPrice = listAVGPrice.Average(x => x);
+          
+            Console.WriteLine($"Symbol:{match.Symbol}" +
+                $" Last:{match.MatchPrice} x {match.MatchQty}" +
+                $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
         }
     }
+
 }
