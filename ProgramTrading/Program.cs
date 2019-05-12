@@ -100,7 +100,9 @@ namespace Lab2
         /// </summary>
         private static void MrWangConnection_OnTradingReply(Reply reply)
         {
-
+            Console.WriteLine($"Status:{reply.OrderStatus} {reply.Side} " +
+                              $"{reply.Qty} {reply.Symbol} @ {reply.Price} " +
+                              $"{reply.orderType} {reply.TimeInForce}");
         }
 
         /// <summary>
@@ -108,40 +110,19 @@ namespace Lab2
         /// </summary>
         private static void MrWangConnection_OnOrderBookData(OrderBook orderBook)
         {
-
+            Console.WriteLine($"Symbol:{orderBook.Symbol}" +
+                $" Bid:{orderBook.BidPrice} x {orderBook.BidQty}" +
+                $" Ask:{orderBook.AskPrice} x {orderBook.AskQty}");
         }
-
-        private static List<double> listAVGPrice = new List<double>();
 
         /// <summary>
         /// 通知成交價
         /// </summary>
-        //private static void MrWangConnection_OnMatchInfo(Match match)
-        //{
-        //    listAVGPrice.Add(match.MatchPrice);
-
-        //    double AVGPrice = 0;
-        //    for (int i = 0; i < listAVGPrice.Count; i++)
-        //    {
-        //        AVGPrice += listAVGPrice[i];
-        //    }
-
-        //    AVGPrice = AVGPrice / listAVGPrice.Count;
-
-        //    Console.WriteLine($"Symbol:{match.Symbol}" +
-        //        $" Last:{match.MatchPrice} x {match.MatchQty}" +
-        //        $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
-        //}
-
         private static void MrWangConnection_OnMatchInfo(Match match)
         {
-            listAVGPrice.Add(match.MatchPrice);
-
-            double AVGPrice = listAVGPrice.Average(x => x);
-
             Console.WriteLine($"Symbol:{match.Symbol}" +
                 $" Last:{match.MatchPrice} x {match.MatchQty}" +
-                $" Volume:{match.Volume} AVGPrice:{AVGPrice}({listAVGPrice.Count})");
+                $" Volume:{match.Volume}");
         }
     }
 
