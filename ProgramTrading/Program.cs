@@ -1,4 +1,5 @@
 ﻿using MrWangAPI;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Lab2
 {
     class Program
     {
+        static Logger logger = LogManager.GetCurrentClassLogger();
         static MrWangConnection MrWangConnection;
         static void Main(string[] args)
         {
@@ -121,7 +123,12 @@ namespace Lab2
         /// </summary>
         private static void MrWangConnection_OnMatchInfo(Match match)
         {
-            Console.WriteLine($"Symbol:{match.Symbol}" +
+            //Console.WriteLine($"Symbol:{match.Symbol}" +
+            //    $" Last:{match.MatchPrice} x {match.MatchQty}" +
+            //    $" Volume:{match.Volume}");
+
+
+            logger.Info($"Symbol:{match.Symbol}" +
                 $" Last:{match.MatchPrice} x {match.MatchQty}" +
                 $" Volume:{match.Volume}");
         }
