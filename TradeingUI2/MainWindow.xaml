@@ -1,0 +1,75 @@
+﻿<Window x:Class="TradeingUI2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TradeingUI2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DataGrid Grid.Row="0" ItemsSource="{Binding Products}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="商品名稱" FontWeight="Bold" Binding="{Binding Symbol}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="{Binding SymbolColor}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="成交價" Binding="{Binding Last}" />
+                <DataGridTextColumn Header="成交量" Binding="{Binding LastQty}" />
+                <DataGridTextColumn Header="買量" Binding="{Binding BidQty}" />
+                <DataGridTextColumn Header="買價" Binding="{Binding Bid}" />
+                <DataGridTextColumn Header="賣價" Binding="{Binding Ask}" />
+                <DataGridTextColumn Header="賣量" Binding="{Binding AskQty}" />
+                <DataGridTextColumn Header="總成交量" Binding="{Binding Volume}" />
+                <DataGridTextColumn Header="參考價" Binding="{Binding Reference}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <ComboBox Name="cb_Side" SelectedIndex="0">
+                <ComboBoxItem Content="Buy" />
+                <ComboBoxItem Content="Sell" />
+            </ComboBox>
+            <Label Content="Symbol:" />
+            <TextBox Name="tb_Symbol" Width="50"/>
+            <Label Content="Price:" />
+            <TextBox Name="tb_Price" Width="50"/>
+            <Label Content="Qty:"/>
+            <TextBox Name="tb_Qty" Width="50"/>
+
+            <ComboBox Name="cb_OrderType" SelectedIndex="0">
+                <ComboBoxItem Content="LMT"/>
+                <ComboBoxItem Content="MKT"/>
+            </ComboBox>
+            <ComboBox Name="cb_TimeInForce" SelectedIndex="0">
+                <ComboBoxItem Content="ROD"/>
+                <ComboBoxItem Content="IOC"/>
+            </ComboBox>
+            <Button Content="送單" Click="Button_Click"/>
+        </StackPanel>
+        <TabControl  Grid.Row="2">
+            <TabItem Header="Reply">
+                <DataGrid ItemsSource="{Binding Orders}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                        <DataGridTextColumn Header="Symbol" FontWeight="Bold" Binding="{Binding Symbol}"/>
+                        <DataGridTextColumn Header="Side" Binding="{Binding Side}" />
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price}" />
+                        <DataGridTextColumn Header="Qty" Binding="{Binding Qty}" />
+                        <DataGridTextColumn Header="OrderType" Binding="{Binding OrderType}" />
+                        <DataGridTextColumn Header="TimeInForce" Binding="{Binding TimeInForce}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Logs">
+                <ListBox ItemsSource="{Binding Logs}" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
