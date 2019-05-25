@@ -16,7 +16,7 @@ namespace NLog_Example
             logger.Info("Holle");
             logger.Error("1");
 
-
+            
             C();
             B();
             A();
